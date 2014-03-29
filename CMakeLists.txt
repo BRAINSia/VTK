@@ -20,9 +20,13 @@ IF(APPLE)
          OSX_SDK_VERSION "${CMAKE_OSX_SYSROOT}")
   SET(VTK_OBJCXX_FLAGS_DEFAULT)
   IF(OSX_SDK_VERSION)
-    IF(${OSX_SDK_VERSION} VERSION_GREATER "10.4")
+    #http://www.vtk.org/Wiki/Cocoa_VTK
+    #https://developer.apple.com/library/ios/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html#//apple_ref/doc/uid/TP40011226
+    # As of 10.8 garbage collection (i.e. -fobj-gc) is deprecated, and as of 10.9 Xcode 5.1 it is an error
+
+    IF(${OSX_SDK_VERSION} VERSION_GREATER "10.4" AND ${OSX_SDK_VERSION} VERSION_LESS "10.9")
       SET(VTK_OBJCXX_FLAGS_DEFAULT "-fobjc-gc")
-    ENDIF(${OSX_SDK_VERSION} VERSION_GREATER "10.4")
+    ENDIF(${OSX_SDK_VERSION} VERSION_GREATER "10.4" AND ${OSX_SDK_VERSION} VERSION_LESS "10.9")
   ENDIF(OSX_SDK_VERSION)
   SET(VTK_REQUIRED_OBJCXX_FLAGS ${VTK_OBJCXX_FLAGS_DEFAULT} CACHE STRING "Extra flags for Objective C compilation")
   MARK_AS_ADVANCED(VTK_REQUIRED_OBJCXX_FLAGS)
